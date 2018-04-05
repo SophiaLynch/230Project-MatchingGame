@@ -1,6 +1,7 @@
 body {
-  color:#fcf5e3;
-  font-family: "Calligraffitti";
+  color:aliceblue;
+  /*font-family: "Calligraffitti";*/
+    font-family: monospace;
   text-align: center;
   background: brown url(../images/bg.jpg);
 }
@@ -8,11 +9,11 @@ body {
 #game {
   background: #9c9;
   padding: 5px;
-
+  
   position: relative;
   background: #232 url(../images/table.jpg);
-  width: 500px;
-  height: 460px;
+  width: 450px;
+  height: 480px;
   margin: 0 auto;
 
   border-radius: 10px;
@@ -30,17 +31,94 @@ body {
   height: 400px;
 }
 
+ul{
+    margin-bottom: 1em;
+    list-style-position: inside;
+}
+
+#docuBody{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-left: 15%;
+    margin-right: 15%;
+    font-family: verdana;
+    color: darkmagenta;
+}
+
+#docuContent{
+    background: #232 url(../images/table.jpg);
+    padding:.5em 1em .5em 1em;
+}
+
 
 /* CSS for the progress bar */
 #timeProgress{
-    width: 100%;
-    background-color: beige;
+    width: 1300px;
+    margin: 15px auto;
+    background-color: #EEDEF4;
 }
 
 #timeBar{
     width: 1%;
     height: 30px;
-    background-color: darkslateblue;
+    background-color: #6C457A;
+}
+
+/*Changing position of the game over text*/
+#gameOvText{
+    margin: auto;
+    height: 100px;
+    position: relative;
+    text-align: center;
+    font-size: 50px;
+    color: red;
+}
+
+/*Change style for winning text*/
+#winningText{
+    margin: auto;
+    height: 100px;
+    position: relative;
+    text-align: center;
+    font-size: 30px;
+    color: #EEDEF4""
+}
+
+/*Change the CSS for the character, speech bubble and their text*/
+.container{
+    position: fixed;
+}
+
+.corrinImage{
+    position: fixed;
+    bottom: 100px;
+    right: 100px;
+}
+
+.corrinBubble{
+    position: fixed;
+    bottom: 300px;
+    right: 280px;
+}
+
+.corrinText{
+    position: fixed;
+    align-content: center;
+    bottom: 430px;
+    right: 360px;
+    font-size: 25px;
+    color: #6C457A;
+}
+
+/* Change the text to show when you win*/
+#winText{
+    margin: auto;
+    height: 100px;
+    position: relative;
+    text-align: center;
+    font-size: 50px;
+    color: azure;
 }
 
 /* Define the 3D perspective view and dimension of each card. */
@@ -49,14 +127,14 @@ body {
   position: absolute;
   width: 80px;
   height: 120px;
-  transition: all .3s;
+  transition: all .1s;
 }
 .face {
   border-radius: 10px;
   width: 100%;
   height: 100%;
   position: absolute;
-  transition: all .3s;
+  transition: all .1s;
   backface-visibility: hidden;
 }
 

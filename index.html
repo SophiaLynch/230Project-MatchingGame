@@ -4,12 +4,25 @@
 	<meta charset="utf-8" />
   <title>Fire Emblem Matching</title>
   <link href="https://fonts.googleapis.com/css?family=Calligraffitti" rel="stylesheet">
-  <link rel="stylesheet" href="css/chibigame.css" />
+  <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body >
   <header>
     <h1>Fire Emblem Matching</h1>
   </header>
+    
+    <!--- Character who adds in input--->
+    <div class = "container">
+        <div class="corrinImage">
+            <img src="images/normalFace.png" alt="Corrin" id="corrinFace">
+        </div>
+        <div class = "corrinBubble">
+            <img src="images/speechBubble.png" alt="Speech Bubble">
+        </div>
+        <div class = "corrinText">
+            <p id="bubbleText">Good luck!</p>
+        </div>
+    </div>
 
   <section id="game">
     <div id="cards">
@@ -20,33 +33,100 @@
     </div> <!-- #cards -->
   </section> <!-- #game -->
     
+    <!---GAME OVER Text when you fail--->
+    <div id = "gameOvText">
+            <p></p>
+    </div>
+    
+    <!--- WIN Text when you win--->
+    <div id = "winningText">
+        <p></p>
+    </div>
+    
     <!-- Progress bar to represent the time given -->
     <div id="timeProgress">
         <div id="timeBar"></div>
     </div>
     
     
-  <footer>
-    <p>Match the Fire Emblem Fates characters within the time given!</p>
-  </footer>
+    <div class="docu">
+     
+        <footer>
+            <a href="pages/documentation.html">Documentation</a>
+        </footer>
+    </div>
+  
 
  <script>
  window.onload = ()=>{
-     moveTimer();
+     update();
  	initBoard();
+     //checkWinGame();
  }
  
   const numCards = 12;
+     
+
+     let gameOverDone = false;
+     let amountMatched = 0;
+     
+     // deck to randomly go through later
+     let randDeck = [
+         'cardR01C01', 'cardR01C01',
+         'cardR01C02', 'cardR01C02',
+         'cardR01C03', 'cardR01C03',
+         'cardR02C01', 'cardR02C01',
+         'cardR02C02', 'cardR02C02',
+         'cardR02C03', 'cardR02C03',
+         'cardR03C03', 'cardR03C03',
+         'cardR04C01', 'cardR04C01',
+         'cardR01C12', 'cardR01C12',
+         'cardR01C11', 'cardR01C11',
+         'cardR02C11', 'cardR02C11',
+         'cardR02C12', 'cardR02C12',
+         'cardR02C13', 'cardR02C13',
+         'cardR01C13', 'cardR01C13',
+         'cardR03C01', 'cardR03C01',
+         'cardR03C02', 'cardR03C02',
+         'cardR03C11', 'cardR03C11',
+         'cardR03C12', 'cardR03C12',
+         'cardR03C13', 'cardR03C13',
+         'cardR04C02', 'cardR04C02',
+         'cardR04C03', 'cardR04C03',
+         'cardR04C11', 'cardR04C11',
+         'cardR04C12', 'cardR04C12',
+         'cardR04C13', 'cardR04C13'
+     ];
+     
+     
+     // get 6 random cards from part of the deck...there may be a repeat or two sometimes, but it is unlikely
+     let randomIndex1 = Math.floor(Math.random() * randDeck.length);
+     let randomIndex2 = Math.floor(Math.random() * randDeck.length);
+     let randomIndex3 = Math.floor(Math.random() * randDeck.length);
+     let randomIndex4 = Math.floor(Math.random() * randDeck.length);
+     let randomIndex5 = Math.floor(Math.random() * randDeck.length);
+     let randomIndex6 = Math.floor(Math.random() * randDeck.length);
+     let rItem1 = randDeck[randomIndex1];
+     let rItem2 = randDeck[randomIndex2];
+     let rItem3 = randDeck[randomIndex3];
+     let rItem4 = randDeck[randomIndex4];
+     let rItem5 = randDeck[randomIndex5];
+     let rItem6 = randDeck[randomIndex6];
+     
+     let deck = [
+         rItem1,rItem1,rItem2,rItem2,rItem3,rItem3,rItem4,rItem4,rItem5,rItem5,rItem6,rItem6
+         
+     ];
   
   // 6 pairs of cards in the initial deck
-  let deck = [
+  /*let deck = [
     'cardR01C01', 'cardR01C01',
     'cardR03C03', 'cardR03C03',
     'cardR04C01', 'cardR04C01',
     'cardR01C12', 'cardR01C12',
     'cardR02C11', 'cardR02C11',
     'cardR03C12', 'cardR03C12',
-  ];
+  ];*/
   
 
   function initBoard(){
@@ -108,12 +188,27 @@
     function checkPattern() {
 	   if (isSamePattern()) {
 	   // here we are using array.forEach(), rather than for...of, for no particular reason :-)
+           //increase how many matches we have
+           amountMatched++;
+           
+           //change the character art
+           document.getElementById("corrinFace").src="images/blushFace.png";
+           
+           // change what the character is saying
+           document.getElementById("bubbleText").innerHTML="A match!";
+           
         document.querySelectorAll(".card-flipped").forEach((element)=>{
       	 element.classList.remove("card-flipped");
       	 element.classList.add("card-removed");
      	  element.addEventListener("transitionend",removeMatchedCards);
         });
         } else {
+            // change the character art
+            document.getElementById("corrinFace").src="images/nervousFace.png";
+            
+            // change what the character is saying
+           document.getElementById("bubbleText").innerHTML="Not a match...";
+            
         // I prefer array.forEach() over for...of when I can write it as a "one-liner"
         document.querySelectorAll(".card-flipped").forEach((element)=>{element.classList.remove("card-flipped")});
         }
@@ -125,19 +220,78 @@
 	   let pattern1 = cards[0].dataset.pattern;
 	   let pattern2 = cards[1].dataset.pattern;
 	   return pattern1 == pattern2;
+        //amountMatched++;
     }
 
   
      function removeMatchedCards(){
          // another .forEach() "one-liner"
+         //amountMatched++;
          document.querySelectorAll(".card-removed").forEach((element)=>{element.parentNode.removeChild(element);});
      }
      
-     // function to make the timer move
-     var timeLeft = 1300;
-     var myInterval = 0;
+     Element.prototype.remove = function(){
+                 this.parentElement.removeChild(this);
+             }
+     NodeList.prototype.remove = HTMLCollection.prototype.remove = function(){
+         for(var i = this.length - 1; i>=0; i++){
+             if(this[i] && this[i].parentElement){
+                 this[i].parentElement.removeChild(this[i]);
+             }
+         }
+     }
+     // function clears all of the cards off of the board and gives a game over message
+     function clearBoard(){
+         
+         if(gameOverDone = true){
+             //Element.classList.remove("card");
+             //console.log(amountMatched);
+             //console.log("GameOver");
+             
+             document.getElementById("cards").remove();
+             document.getElementById("gameOvText").innerHTML = "GAME OVER";
+             
+             //change the character image
+             document.getElementById("corrinFace").src="images/angryFace.png";
+             
+             // change what the character is saying
+             document.getElementById("bubbleText").innerHTML="We lost...";
+             
+         }
+         
+         /*if(amountMatched == 6){
+             document.getElementById("gameOvText").innerHTML = "YOU WIN";
+         }*/
+         
+     }
      
-     function timerSeconds(){
+     // function to win the game
+     function checkWinGame(){
+         if(amountMatched == 6){
+             // change the character art
+             document.getElementById("corrinFace").src="images/happyFace.png";
+             
+             // change what the character is saying
+             document.getElementById("bubbleText").innerHTML="We won!!";
+             
+             //console.log("winning");
+             document.getElementById("winningText").innerHTML = "Refresh to play again!";
+             currentTime = 0;
+             progBar.style.width = 0 + 'px';
+         }
+     }
+     
+     // function to make the timer move
+     let currentTime = 0;
+     let totalTime = 30;
+     let currentWidth = 0;
+     let totalWidth = 1300;
+     let progBar = document.getElementById("timeBar");
+     
+     //var timeLeft = 1300;
+     //var myInterval = 0;
+     
+     /*function timerSeconds(){
          if(myInterval > 0){
              clearInterval(myInterval);
          }
@@ -146,14 +300,47 @@
      
      function secondsLeft(){
          timeLeft++;
+     }*/
+     
+     // create an update function to call itself every 60th of a second
+     function update(){
+         moveTimer();
+         
+         // calls update function again
+         requestAnimationFrame(update);
      }
      
      function moveTimer(){
-         secondsLeft();
-         timerSeconds();
-         console.log("Loading");
-         var elem = document.getElementById("timeBar");
-         var width = 1;
+         // move time 60th of a second
+         currentTime += 1/60;
+         
+         if(currentTime > totalTime){
+             currentTime = totalTime;
+             gameOverDone = true;
+             clearBoard();
+         } else{
+             checkWinGame();
+         }
+         
+         
+         
+         //secondsLeft();
+         //timerSeconds();
+         //console.log("Loading");
+         
+         //var progBar = document.getElementById("timeBar");
+         
+         currentWidth = (currentTime/totalTime) * totalWidth;
+         progBar.style.width = currentWidth + 'px';
+         
+         //console.dir(currentTime);
+         //console.dir(amountMatched);
+         
+         /*if(amountMatched = 6){
+          progBar.style.width =  0 + 'px';   
+         }*/
+         
+         /*var width = 1;
          var id = setInterval(frame,300);
          function frame(){
              if(timeLeft >=1300){
@@ -164,14 +351,14 @@
                  elem.style.width = width + '%';
              }
              
-             /*if(width >= 1300)
+             if(width >= 1300)
                  {
                      timeLeft = 0;
                      clearInterval(id);
                  } else{
                      width++;
                      elem.style.width = width + '%';
-                 }*/
+                 }
          }
          
          if(timeLeft <= 0){
@@ -179,7 +366,7 @@
              elem.style.width = 0;
              document.body.innerHTML = " ";
              document.p.innerHTML = "Game over!";
-         }
+         }*/
      }
      
   
